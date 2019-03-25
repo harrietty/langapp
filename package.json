@@ -28,6 +28,7 @@
     "enzyme-adapter-react-16": "^1.7.1",
     "eslint": "^5.4.0",
     "eslint-config-google": "^0.11.0",
+    "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-react": "^7.12.3",
     "jest": "^24.5.0",
     "json-loader": "^0.5.7",
@@ -39,6 +40,8 @@
   "dependencies": {
     "amazon-cognito-identity-js": "^3.0.9",
     "amazon-cognito-js": "^1.1.0",
+    "aws-sdk": "^2.427.0",
+    "prop-types": "^15.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.1",

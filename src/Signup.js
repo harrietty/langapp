@@ -1,11 +1,15 @@
 import React from "react";
 import { createUser } from "./api/aws/users_api";
+import { connect } from "react-redux";
+
+import { signIn } from "./redux/auth";
 
 class Signup extends React.Component {
   state = {
     username: "harrietty",
     email: "harriethryder@gmail.com",
-    password: "foo"
+    password: "",
+    validationMessage: null
   };
 
   handleChange = (key, e) => {
@@ -22,37 +26,61 @@ class Signup extends React.Component {
         this.state.password,
         this.state.email
       );
-      console.log({ cognitoUser });
+      this.props.signIn(cognitoUser);
+      this.props.history.push("/confirm");
     } catch (e) {
-      console.log({ e });
+      if (e.message) {
+        this.setState({
+          validationMessage: e.message
+        });
+      } else {
+        throw e;
+      }
     }
   };
+
   render() {
     return (
       <div>
         <h1>Sign up</h1>
-        <label>Username:</label>
-        <input
-          type="text"
-          value={this.state.username}
-          onChange={this.handleChange.bind(this, "username")}
-        />
-        <label>Email:</label>
-        <input
-          type="email"
-          value={this.state.email}
-          onChange={this.handleChange.bind(this, "email")}
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={this.state.password}
-          onChange={this.handleChange.bind(this, "password")}
-        />
-        <button onClick={this.signUp}>Sign up</button>
+        <div>
+          <label>Username:</label>
+          <input
+            type="text"
+            value={this.state.username}
+            onChange={this.handleChange.bind(this, "username")}
+          />
+          <label>Email:</label>
+          <input
+            type="email"
+            value={this.state.email}
+            onChange={this.handleChange.bind(this, "email")}
+          />
+          <label>Password:</label>
+          <input
+            type="password"
+            value={this.state.password}
+            onChange={this.handleChange.bind(this, "password")}
+          />
+          <button onClick={this.signUp}>Sign up</button>
+        </div>
+        <div>
+          {this.state.validationMessage && (
+            <p>{this.state.validationMessage}</p>
+          )}
+        </div>
       </div>
     );
   }
 }
 
-export default Signup;
+const mapDispatchToProps = dispatch => ({
+  signIn: cognitoUser => {
+    dispatch(signIn(cognitoUser));
+  }
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Signup);

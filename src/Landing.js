@@ -1,13 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 
 class Landing extends React.Component {
-  componentDidMount() {
-    if (this.props.isSignedIn) {
-      this.props.history.push("/home");
-    }
-  }
   render() {
     return (
       <div>
@@ -17,10 +12,10 @@ class Landing extends React.Component {
       </div>
     );
   }
+
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  };
 }
 
-const mapStateToProps = auth => ({
-  isSignedIn: auth.isSignedIn
-});
-
-export default connect(mapStateToProps)(Landing);
+export default Landing;

@@ -1,7 +1,7 @@
 import { CognitoUserPool } from "amazon-cognito-identity-js";
 
 // TODO: Do we need this? for sync?
-//import "amazon-cognito-js";
+// import "amazon-cognito-js";
 
 const REGION = "eu-west-1";
 const USER_POOL_ID = "eu-west-1_f482mDdfq";
