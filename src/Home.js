@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import { signOut } from "./api/aws/users_api";
 import * as auth from "./redux/auth";
 
+import Nav from "./Nav";
+
 class Home extends React.Component {
   signOut = () => {
     try {
@@ -19,8 +21,8 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <h1>The home component</h1>
-        <button onClick={this.signOut}>Sign Out</button>
+        <Nav signOut={this.signOut} />
+        <div className="container" />
       </div>
     );
   }

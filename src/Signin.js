@@ -23,6 +23,7 @@ class Signin extends React.Component {
         this.state.password
       );
       this.props.signIn(cognitoUser);
+      console.log(cognitoUser);
       this.props.history.push("/home");
     } catch (e) {
       if (e.code === "UserNotConfirmedException") {
