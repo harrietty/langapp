@@ -1,36 +1,46 @@
 import qs from "querystring";
 import React from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signIn } from "./api/aws/users_api";
 import * as auth from "./redux/auth";
 
+import { Container, WhiteButton, Error, Input } from "./styles/common";
+
 class Signin extends React.Component {
   state = {
     username: "harrietty",
-    password: ""
+    password: "",
+    signInError: null
   };
+
   handleChange = (key, e) => {
     this.setState({
       [key]: e.target.value
     });
   };
 
-  signIn = async () => {
+  handleSubmit = async e => {
+    e.preventDefault();
     try {
       const cognitoUser = await signIn(
         this.state.username,
         this.state.password
       );
       this.props.signIn(cognitoUser);
-      console.log(cognitoUser);
       this.props.history.push("/home");
     } catch (e) {
       if (e.code === "UserNotConfirmedException") {
         this.props.history.push(`/confirm?username=${this.state.username}`);
       } else {
-        console.log("error after sign in", e);
-        throw e;
+        if (e.code === "NotAuthorizedException") {
+          this.setState({
+            signInError: e.message
+          });
+        } else {
+          throw e;
+        }
       }
     }
   };
@@ -38,27 +48,36 @@ class Signin extends React.Component {
     const emailConfirmed = qs.parse(this.props.location.search.slice(1))
       .confirm_email_success;
     return (
-      <div>
-        <h1>Sign In</h1>
+      <Container>
+        <h3>Sign In</h3>
         {emailConfirmed ? (
           <h5>Your email address has been confirmed. Please sign in again.</h5>
         ) : null}
         <div>
-          <label>Username</label>
-          <input
-            type="text"
-            value={this.state.username}
-            onChange={this.handleChange.bind(this, "username")}
-          />
-          <label>Password</label>
-          <input
-            type="password"
-            value={this.state.password}
-            onChange={this.handleChange.bind(this, "password")}
-          />
-          <button onClick={this.signIn}>Sign in</button>
+          <form onSubmit={this.handleSubmit}>
+            <fieldset>
+              <label>Username</label>
+              <Input
+                type="text"
+                value={this.state.username}
+                onChange={this.handleChange.bind(this, "username")}
+              />
+            </fieldset>
+
+            <fieldset>
+              <label>Password</label>
+              <Input
+                type="password"
+                value={this.state.password}
+                onChange={this.handleChange.bind(this, "password")}
+              />
+            </fieldset>
+            <WhiteButton type="submit">Sign in</WhiteButton>
+          </form>
+          {this.state.signInError && <Error>{this.state.signInError}</Error>}
+          <Link to="/">(back)</Link>
         </div>
-      </div>
+      </Container>
     );
   }
 

@@ -1,8 +1,11 @@
 import React from "react";
-import { createUser } from "./api/aws/users_api";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-
+import { createUser } from "./api/aws/users_api";
 import { signIn } from "./redux/auth";
+
+import { Container, WhiteButton, Error, Input } from "./styles/common";
 
 class Signup extends React.Component {
   state = {
@@ -19,7 +22,8 @@ class Signup extends React.Component {
     });
   };
 
-  signUp = async () => {
+  handleSubmit = async e => {
+    e.preventDefault();
     try {
       const { cognitoUser } = await createUser(
         this.state.username,
@@ -41,37 +45,56 @@ class Signup extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Sign up</h1>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={this.state.username}
-            onChange={this.handleChange.bind(this, "username")}
-          />
-          <label>Email:</label>
-          <input
-            type="email"
-            value={this.state.email}
-            onChange={this.handleChange.bind(this, "email")}
-          />
-          <label>Password:</label>
-          <input
-            type="password"
-            value={this.state.password}
-            onChange={this.handleChange.bind(this, "password")}
-          />
-          <button onClick={this.signUp}>Sign up</button>
+      <Container>
+        <div className="row">
+          <div className="twelve columns">
+            <h3>Sign up</h3>
+            <form onSubmit={this.handleSubmit}>
+              <fieldset>
+                <label htmlFor="usernameInput">Username:</label>
+                <Input
+                  type="text"
+                  id="usernameInput"
+                  value={this.state.username}
+                  onChange={this.handleChange.bind(this, "username")}
+                />
+              </fieldset>
+              <fieldset>
+                <label htmlFor="emailInput">Email:</label>
+                <Input
+                  type="email"
+                  id="emailInput"
+                  value={this.state.email}
+                  onChange={this.handleChange.bind(this, "email")}
+                />
+              </fieldset>
+              <fieldset>
+                <label htmlFor="passwordInput">Password:</label>
+                <Input
+                  type="password"
+                  id="passwordInput"
+                  value={this.state.password}
+                  onChange={this.handleChange.bind(this, "password")}
+                />
+              </fieldset>
+              <WhiteButton type="submit">Sign up</WhiteButton>
+            </form>
+          </div>
+          <div>
+            {this.state.validationMessage && (
+              <Error>{this.state.validationMessage}</Error>
+            )}
+          </div>
+          <Link to="/">(back)</Link>
         </div>
-        <div>
-          {this.state.validationMessage && (
-            <p>{this.state.validationMessage}</p>
-          )}
-        </div>
-      </div>
+      </Container>
     );
   }
+
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+    signIn: PropTypes.func.isRequired
+  };
 }
 
 const mapDispatchToProps = dispatch => ({
