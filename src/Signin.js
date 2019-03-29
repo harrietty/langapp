@@ -7,6 +7,7 @@ import { signIn } from "./api/aws/users_api";
 import * as auth from "./redux/auth";
 
 import { Container, WhiteButton, Error, Input } from "./styles/common";
+import GoogleButton from "./GoogleButton";
 
 class Signin extends React.Component {
   state = {
@@ -75,6 +76,7 @@ class Signin extends React.Component {
             <WhiteButton type="submit">Sign in</WhiteButton>
           </form>
           {this.state.signInError && <Error>{this.state.signInError}</Error>}
+          <GoogleButton />
           <Link to="/">(back)</Link>
         </div>
       </Container>

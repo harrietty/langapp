@@ -5,6 +5,7 @@ import {
 } from "amazon-cognito-identity-js";
 import * as AWS from "aws-sdk/global";
 import { userPool, IDENTITY_POOL_ID, USERPOOL_ID } from "./aws_profile";
+import { region } from "../../../config";
 
 export function createUser(username, password, email) {
   return new Promise((resolve, reject) => {
@@ -57,7 +58,7 @@ export function signIn(username, password) {
       onSuccess: result => {
         const jwtToken = result.getAccessToken().getJwtToken();
         localStorage.setItem("user_token", jwtToken);
-        AWS.config.region = "eu-west-1";
+        AWS.config.region = region;
 
         const loginsObj = {
           [USERPOOL_ID]: result.getIdToken().getJwtToken()
